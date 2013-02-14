@@ -8,9 +8,14 @@ License: MIT
 Version: 0.001  
 Date: 15.02.2013  
 
+##demo
+
+scan this QR-Code with your iPhone to open the PullToRefresh example  
+<img src="http://cdn.simon.waldherr.eu/projects/PTR/qr.png" alt="http://cdn.simon.waldherr.eu/projects/PTR/"/>  
+
 ##contact
 
-Feel free to contact me via [eMail](mailto:contact@selfcss.org) or on [Twitter](http://twitter.com/simonwaldherr). This software will be continually developed. Suggestions and tips are always welcome.
+Feel free to contact me via [eMail](mailto:contact@simonwaldherr.de) or on [Twitter](http://twitter.com/simonwaldherr). This software will be continually developed. Suggestions and tips are always welcome.
 
 ##resources
 
