@@ -19,7 +19,7 @@
       </header>
       <div id="demo">
         <div id="demo-window">
-          <div class="scrollable" data-url="./random.php" id="list">
+          <div class="scrollable" data-url="" id="list">
             <div class="wrap">
               <ol class="content">
                 <li class="error">only works on touch devices, here you can put a refresh button for desktop browsers</li>
@@ -115,10 +115,9 @@
       </div>
       <footer>
         <ul>
-          <li id="footer1" onclick="setFooter(1)" class="active"><a href="#">Button 1</a></li>
-          <li id="footer2" onclick="setFooter(2)"><a href="#">Button 2</a></li>
-          <li id="footer3" onclick="setFooter(3)"><a href="#">Button 3</a></li>
-          <li id="footer4" onclick="setFooter(4)"><a href="#">Button 4</a></li>
+          <li id="footer1" onclick="setFooter(1)"><a href="#">Hashes</a></li>
+          <li id="footer2" onclick="setFooter(2)"><a href="#">Numbers</a></li>
+          <li id="footer3" onclick="setFooter(3)"><a href="#">HTML</a></li>
         </ul>
       </footer>
     </div>
@@ -127,13 +126,25 @@
     <script type="text/javascript">
       function init() {
         ptr_init();
+        window.alert('please select which data you want to load');
       }
       function setFooter(id) {
         document.getElementById('footer1').className = '';
         document.getElementById('footer2').className = '';
         document.getElementById('footer3').className = '';
-        document.getElementById('footer4').className = '';
         document.getElementById('footer'+id).className = 'active';
+        
+        switch(id) {
+          case 1:
+            document.getElementById('list').setAttribute('data-url','./random/hashes.php');
+            break;
+          case 2:
+            document.getElementById('list').setAttribute('data-url','./random/numbers.php');
+            break;
+          case 3:
+            document.getElementById('list').setAttribute('data-url','./random/html.php');
+            break;
+        }
       }
     </script>
   </body>
