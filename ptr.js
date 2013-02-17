@@ -1,7 +1,7 @@
 /*
  *
  * PullToRefresh
- * Version 0.002
+ * Version 0.003
  * License:  MIT
  * SimonWaldherr
  *
@@ -16,21 +16,21 @@ function ptr_init() {
   var scrollables = document.getElementsByClassName('scrollable');
   
   for(var i = 0; i<scrollables.length; i++) {
-    if(scrollables[i].getAttribute('data-url').length > 3) {
-      var ptr_box    = document.createElement('div'),
-      ptr_container  = document.createElement('div'),
-      ptr_image      = document.createElement('div'),
-      ptr_text       = document.createElement('div');
+    if(scrollables[i].hasAttribute('data-url') != false) {
+      var ptr_box   = document.createElement('div'),
+      ptr_container = document.createElement('div'),
+      ptr_image     = document.createElement('div'),
+      ptr_text      = document.createElement('div');
       
       ptr_box.appendChild(ptr_container);
       ptr_container.appendChild(ptr_image);
       ptr_container.appendChild(ptr_text);
       ptr_text.innerHTML = 'Pull to refresh';
       
-      ptr_box.className        = 'ptr_box';
-      ptr_container.className  = 'ptr_container';
-      ptr_image.className      = 'ptr_image';
-      ptr_text.className       = 'ptr_text';
+      ptr_box.className       = 'ptr_box';
+      ptr_container.className = 'ptr_container';
+      ptr_image.className     = 'ptr_image';
+      ptr_text.className      = 'ptr_text';
       
       scrollables[i].firstElementChild.insertBefore(ptr_box, scrollables[i].firstElementChild.firstChild);
     }
@@ -51,24 +51,24 @@ function ptr_init() {
           ptr_scrollable_parent = i;
           i = 10;
           
-          if(parent.getAttribute('data-url').length > 3) {
+          if(parent.hasAttribute('data-url') != false) {
             if(typeof parent.getElementsByClassName('ptr_box')[0] != 'undefined') {
               
             } else {
-              var ptr_box    = document.createElement('div'),
-              ptr_container  = document.createElement('div'),
-              ptr_image      = document.createElement('div'),
-              ptr_text       = document.createElement('div');
+              var ptr_box   = document.createElement('div'),
+              ptr_container = document.createElement('div'),
+              ptr_image     = document.createElement('div'),
+              ptr_text      = document.createElement('div');
               
               ptr_box.appendChild(ptr_container);
               ptr_container.appendChild(ptr_image);
               ptr_container.appendChild(ptr_text);
               ptr_text.innerHTML = 'Pull to refresh';
               
-              ptr_box.className        = 'ptr_box';
-              ptr_container.className  = 'ptr_container';
-              ptr_image.className      = 'ptr_image';
-              ptr_text.className       = 'ptr_text';
+              ptr_box.className       = 'ptr_box';
+              ptr_container.className = 'ptr_container';
+              ptr_image.className     = 'ptr_image';
+              ptr_text.className      = 'ptr_text';
               
               parent.firstElementChild.insertBefore(ptr_box, parent.firstElementChild.firstChild);
             }
@@ -103,11 +103,16 @@ function ptr_init() {
     var scroll = false;
     var rotate = 90;
     
+    if(ptr_scrollable_parent == false) {
+      e.preventDefault();
+      return false;
+    }
+    
     for(var i = 0; i < ptr_scrollable_parent; i++) {
       parent = parent.parentNode;
     }
     
-    if((ptr_scrollable_parent != false)&&(parent.getAttribute('data-url') != '')) {
+    if((ptr_scrollable_parent != false)&&(parent.hasAttribute('data-url') != false)) {
       
       scroll = true;
       
@@ -123,6 +128,7 @@ function ptr_init() {
         }
         
         if(ptr_element.scrollTop < 0) {
+          ptr.style.opacity = 1.0;
           ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['-webkit-transform'] = "scale(1) rotate("+rotate+"deg)";
           
           if((ptr_element.scrollTop < -30)&&(ptr_element.scrollTop > -45)) {
@@ -157,6 +163,7 @@ function ptr_init() {
             var ptr_wrapelement = ptr_element.getElementsByClassName('wrap')[0];
             var ptr_eleId = parent.id;
             var time = new Date();
+            
             reqwest({
                 url: parent.getAttribute('data-url')+'?rt='+time.getTime()
               , type: 'html'
@@ -181,8 +188,13 @@ function ptr_init() {
                   ptr_wrapelement.className = ptr_wrapelement.className.replace(' active', '');
                   var inserted = document.getElementsByClassName('inserted')[0];
                   ptr_element.scrollTop = inserted.clientHeight-51;
+                  ptr_wrapelement.getElementsByClassName('ptr_text')[0].innerHTML = '';
+                  ptr.style.opacity = 0.0;
                   
-                  hideLoading(ptr_eleId);
+                  ptr_wrapelement.getElementsByClassName('ptr_image')[0].className = ptr_wrapelement.getElementsByClassName('ptr_image')[0].className.replace(' loading', '');
+                  ptr_wrapelement.style.top = '0px';
+                  
+                  ptr_scrollable_parent = false;
                 }
             })
           }
@@ -208,8 +220,8 @@ function ptr_init() {
       parent = parent.parentNode;
     }
     
-    if((parent.getAttribute('data-url') != '')&&(ptr_scrollable_parent != false)) {
-      if((parent.getAttribute('data-url').length > 3)) {
+    if((parent.hasAttribute('data-url') != false)&&(ptr_scrollable_parent != false)) {
+      if((parent.hasAttribute('data-url') != false)) {
         
         var ptr_element = parent;
         var ptr_wrapelement = ptr_element.getElementsByClassName('wrap')[0];
@@ -227,13 +239,4 @@ function ptr_init() {
     
     ptr_scrollable_parent = false;
   });
-}
-
-function hideLoading(elementId) {
-  var element     = document.getElementById(elementId);
-  var wrapelement = element.getElementsByClassName('wrap')[0];
-  var className   = element.className;
-  
-  wrapelement.getElementsByClassName('ptr_image')[0].className = wrapelement.getElementsByClassName('ptr_image')[0].className.replace(' loading', '');
-  wrapelement.style.top = '0px';
 }
