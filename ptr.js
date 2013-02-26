@@ -130,11 +130,8 @@ function ptr_init() {
         }
         
         if(ptr_element.scrollTop < 0) {
-          //ptr.style.opacity = 1.0;
           ptr.style.height = (scrolldistance < 55) ? scrolldistance+'px' : '55px';
           ptr.style.top = (scrolldistance < 55) ? '-'+scrolldistance+'px' : '-55px';
-          
-          console.log(scrolldistance+' = '+ptr_element.scrollTop);
           
           ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['-webkit-transform'] = "scale(1) rotate("+rotate+"deg)";
         }
@@ -147,6 +144,7 @@ function ptr_init() {
             
             if(parent.getAttribute('data-url') == 'reload') {
               window.location.reload(true);
+              return false;
             }
             
             var ptr_element = parent;
@@ -224,7 +222,6 @@ function ptr_init() {
           ptr_wrapelement.className = ptr_wrapelement.className.replace(' active', '');
           ptr_wrapelement.style.top = '51px';
         } else {
-          //ptr.style.opacity = 0.0;
           ptr.style.height = '0px';
           ptr.style.top = '0px';
         }
