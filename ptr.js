@@ -1,7 +1,7 @@
 /*
  *
  * PullToRefresh
- * Version 0.003
+ * Version 0.004
  * License:  MIT
  * SimonWaldherr
  *
@@ -122,31 +122,21 @@ function ptr_init() {
       var top = ptr_element.scrollTop;
       var ptr = ptr_element.getElementsByClassName('ptr_box')[0];
       
+      var scrolldistance = Math.abs(parseInt(ptr_element.scrollTop));
+      
       if((ptr_wrapelement.className.indexOf(' active') === -1)&&(!ptr_wrapelement.getElementsByClassName('ptr_image')[0].className.match('loading'))) {
         if(ptr_element.scrollTop < -25) {
           rotate = (top < -40) ? -90 : 130 + (top*12+270);
         }
         
         if(ptr_element.scrollTop < 0) {
-          ptr.style.opacity = 1.0;
-          ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['-webkit-transform'] = "scale(1) rotate("+rotate+"deg)";
+          //ptr.style.opacity = 1.0;
+          ptr.style.height = (scrolldistance < 55) ? scrolldistance+'px' : '55px';
+          ptr.style.top = (scrolldistance < 55) ? '-'+scrolldistance+'px' : '-55px';
           
-          if((ptr_element.scrollTop < -30)&&(ptr_element.scrollTop > -45)) {
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['width'] = "40px";
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['margin-left'] = "10px";
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['margin-right'] = "10px";
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['background-size'] = "50% 100%";
-          } else if(ptr_element.scrollTop >= -30) {
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['width'] = "30px";
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['margin-left'] = "15px";
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['margin-right'] = "15px";
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['background-size'] = "100% 100%";
-          } else {
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['width'] = "60px";
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['margin-left'] = "0px";
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['margin-right'] = "0px";
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['background-size'] = "34% 100%";
-          }
+          console.log(scrolldistance+' = '+ptr_element.scrollTop);
+          
+          ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['-webkit-transform'] = "scale(1) rotate("+rotate+"deg)";
         }
         
         if(ptr_element.scrollTop < -51) {
@@ -154,10 +144,10 @@ function ptr_init() {
             ptr_wrapelement.className += ' active';
             ptr_wrapelement.getElementsByClassName('ptr_text')[0].innerHTML = 'Loading ...';
             ptr_wrapelement.getElementsByClassName('ptr_image')[0].className += ' loading';
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['width'] = "30px";
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['margin-left'] = "15px";
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['margin-right'] = "15px";
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['background-size'] = "100% 100%";
+            
+            if(parent.getAttribute('data-url') == 'reload') {
+              window.location.reload(true);
+            }
             
             var ptr_element = parent;
             var ptr_wrapelement = ptr_element.getElementsByClassName('wrap')[0];
@@ -233,6 +223,10 @@ function ptr_init() {
         if(ptr_wrapelement.getElementsByClassName('ptr_image')[0].className.match('loading')) {
           ptr_wrapelement.className = ptr_wrapelement.className.replace(' active', '');
           ptr_wrapelement.style.top = '51px';
+        } else {
+          //ptr.style.opacity = 0.0;
+          ptr.style.height = '0px';
+          ptr.style.top = '0px';
         }
       }
     }
