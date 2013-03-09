@@ -1,12 +1,16 @@
 #PullToRefresh
 
-a JavaScript implementation of PullToRefresh without jQuery or other Frameworks under MIT-License
+a JavaScript implementation of PullToRefresh without jQuery or other Frameworks and under the MIT-License
 
 ##about
 
 License: MIT  
-Version: 0.006  
+Version: 0.007  
 Date: 09.03.2013  
+
+##howto
+
+take a look at the index.html file and use it as a reference on how to integrate PullToRefresh into your project.  
 
 ##demo
 
