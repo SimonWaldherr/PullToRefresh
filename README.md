@@ -5,8 +5,8 @@ a JavaScript implementation of PullToRefresh without jQuery or other Frameworks 
 ##about
 
 License: MIT  
-Version: 0.005  
-Date: 26.02.2013  
+Version: 0.006  
+Date: 09.03.2013  
 
 ##demo
 

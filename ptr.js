@@ -1,7 +1,7 @@
 /*
  *
  * PullToRefresh
- * Version 0.005
+ * Version 0.006
  * License:  MIT
  * SimonWaldherr
  *
@@ -14,7 +14,7 @@ var ptr_scrollable_parent = false;
 
 function ptr_init() {
   "use strict";
-  var  ptr_box, ptr_container, ptr_image, ptr_text, i = 0, scrollables = document.getElementsByClassName('scrollable');
+  var  ptr_box, ptr_container, ptr_image, ptr_text, i = 0, scrollables = document.getElementsByClassName('ptr_scrollable');
   if ((window.hasOwnProperty('ontouchstart')) || (window.navigator.msPointerEnabled)) {
     document.getElementsByTagName('body')[0].className += ' touch';
   } else {
@@ -34,6 +34,7 @@ function ptr_init() {
       ptr_text.innerHTML = 'Pull to refresh';
 
       ptr_box.className = 'ptr_box';
+      ptr_box.style.right = '99%';
       ptr_container.className = 'ptr_container';
       ptr_image.className = 'ptr_image';
       ptr_text.className = 'ptr_text';
@@ -52,7 +53,7 @@ function ptr_init() {
     for (i = 0; i < 10; i += 1) {
       if (parent.className !== undefined) {
 
-        if (parent.className.match('scrollable')) {
+        if (parent.className.match('ptr_scrollable')) {
 
           ptr_scrollable_parent = i;
           i = 10;
@@ -70,11 +71,15 @@ function ptr_init() {
               ptr_text.innerHTML = 'Pull to refresh';
 
               ptr_box.className = 'ptr_box';
+              ptr_box.style.right = '0px';
               ptr_container.className = 'ptr_container';
               ptr_image.className = 'ptr_image';
               ptr_text.className = 'ptr_text';
 
               parent.firstElementChild.insertBefore(ptr_box, parent.firstElementChild.firstChild);
+            } else {
+              parent.getElementsByClassName('ptr_box')[0].style.opacity = 1.0;
+              parent.getElementsByClassName('ptr_text')[0].innerHTML = 'Pull to refresh';
             }
           } else if (parent.getElementsByClassName('ptr_box')[0] !== undefined) {
             parent.removeChild(parent.getElementsByClassName('ptr_box')[0]);
@@ -82,6 +87,7 @@ function ptr_init() {
 
           if (parent.scrollTop === 0) {
             parent.scrollTop = 1;
+            parent.getElementsByClassName('ptr_wrap')[0].style.top = '1px';
           } else if ((parent.scrollTop + parent.offsetHeight) === parent.scrollHeight) {
             parent.scrollTop = parent.scrollTop - 1;
           }
@@ -103,6 +109,7 @@ function ptr_init() {
 
   document.addEventListener('touchmove', function (e) {
     var parent = e.target, scroll = false, rotate = 90, i = 0, ptr_element, ptr_wrapelement, top, ptr, scrolldistance, ptr_eleId, time, ptrbox, insert, inserted;
+
     if (ptr_scrollable_parent === false) {
       e.preventDefault();
       return false;
@@ -117,28 +124,32 @@ function ptr_init() {
       scroll = true;
 
       ptr_element = parent;
-      ptr_wrapelement = ptr_element.getElementsByClassName('wrap')[0];
+      ptr_wrapelement = ptr_element.getElementsByClassName('ptr_wrap')[0];
       top = ptr_element.scrollTop;
-      ptr = ptr_element.getElementsByClassName('ptr_box')[0];
-      scrolldistance = Math.abs(parseInt(ptr_element.scrollTop, 10));
+      ptr_box = ptr_element.getElementsByClassName('ptr_box')[0];
+      scrolldistance = Math.abs(ptr_element.scrollTop);
 
-      if ((ptr_wrapelement.className.indexOf(' active') === -1) && (!ptr_wrapelement.getElementsByClassName('ptr_image')[0].className.match('loading')) && (ptr_element.scrollTop < 1)) {
+      if ((ptr_wrapelement.className.indexOf(' active') === -1) && (!ptr_wrapelement.getElementsByClassName('ptr_image')[0].className.match('ptr_loading')) && (ptr_element.scrollTop < 1)) {
         if (ptr_element.scrollTop < -25) {
-          rotate = (top < -40) ? -90 : 130 + (top * 12 + 270);
+          rotate = (top < -40) ? -90 : 130 + parseInt(top * 12 + 270, 10);
         }
 
         if (ptr_element.scrollTop < 0) {
-          ptr.style.height = (scrolldistance < 55) ? scrolldistance + 'px' : '55px';
-          ptr.style.top = (scrolldistance < 55) ? '-' + scrolldistance + 'px' : '-55px';
+          ptr_box.style.right = '0px';
+          if (scrolldistance > 55) {
+            ptr_box.style.height = '55px';
+            ptr_box.style.top = '-55px';
+          }
 
-          ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['-webkit-transform'] = "scale(1) rotate(" + rotate + "deg)";
+          ptr_wrapelement.getElementsByClassName('ptr_image')[0].style['-webkit-transform'] = 'scale(1) rotate(' + rotate + 'deg)';
         }
 
         if (ptr_element.scrollTop < -51) {
-          if (ptr_wrapelement.className.indexOf(' active') === -1) {
-            ptr_wrapelement.className += ' active';
+          if (ptr_wrapelement.className.indexOf(' ptr_active') === -1) {
+            ptr_box.style.right = '0px';
+            ptr_wrapelement.className += ' ptr_active';
             ptr_wrapelement.getElementsByClassName('ptr_text')[0].innerHTML = 'Loading ...';
-            ptr_wrapelement.getElementsByClassName('ptr_image')[0].className += ' loading';
+            ptr_wrapelement.getElementsByClassName('ptr_image')[0].className += ' ptr_loading';
 
             if (parent.getAttribute('data-url') === 'reload') {
               window.location.reload(true);
@@ -146,7 +157,7 @@ function ptr_init() {
             }
 
             ptr_element = parent;
-            ptr_wrapelement = ptr_element.getElementsByClassName('wrap')[0];
+            ptr_wrapelement = ptr_element.getElementsByClassName('ptr_wrap')[0];
             ptr_eleId = parent.id;
             time = new Date();
 
@@ -160,34 +171,35 @@ function ptr_init() {
               error: function () {
                 alert('Could not connect');
                 ptr_wrapelement.style.top = '0px';
-                ptr.getElementsByClassName('ptr_image')[0].className = ptr.getElementsByClassName('ptr_image')[0].className.replace(' loading', '');
-                ptr_wrapelement.className = ptr_wrapelement.className.replace(' active', '');
+                ptr_box.getElementsByClassName('ptr_image')[0].className = ptr.getElementsByClassName('ptr_image')[0].className.replace(' loading', '');
+                ptr_wrapelement.className = ptr_wrapelement.className.replace(' ptr_active', '');
               },
               success: function (resp) {
                 ptrbox = document.getElementById(ptr_eleId).getElementsByClassName('ptr_box')[0];
                 insert = document.createElement('div');
                 insert.innerHTML = resp;
-                insert.className = 'inserted';
+                insert.className = 'ptr_inserted';
 
                 ptr_wrapelement.insertBefore(insert, ptrbox.nextSibling);
                 ptr_wrapelement.style.top = '0px';
-                ptr.getElementsByClassName('ptr_image')[0].className = ptr.getElementsByClassName('ptr_image')[0].className.replace(' loading', '');
-                ptr_wrapelement.className = ptr_wrapelement.className.replace(' active', '');
-                inserted = document.getElementsByClassName('inserted')[0];
+                ptr_box.getElementsByClassName('ptr_image')[0].className = ptr_box.getElementsByClassName('ptr_image')[0].className.replace(' ptr_loading', '');
+                ptr_wrapelement.className = ptr_wrapelement.className.replace(' ptr_active', '');
+                inserted = document.getElementsByClassName('ptr_inserted')[0];
                 ptr_element.scrollTop = inserted.clientHeight - 51;
                 ptr_wrapelement.getElementsByClassName('ptr_text')[0].innerHTML = '';
-                ptr.style.opacity = 0.0;
+                ptr_box.style.right = '99%';
 
-                ptr_wrapelement.getElementsByClassName('ptr_image')[0].className = ptr_wrapelement.getElementsByClassName('ptr_image')[0].className.replace(' loading', '');
-                ptr_wrapelement.style.top = '0px';
+                ptr_wrapelement.getElementsByClassName('ptr_image')[0].className = ptr_wrapelement.getElementsByClassName('ptr_image')[0].className.replace(' ptr_loading', '');
 
                 ptr_scrollable_parent = false;
               }
             });
           }
         } else if (ptr_element.scrollTop !== 0) {
-          ptr_wrapelement.className = ptr_wrapelement.className.replace(' active', '');
-          ptr_wrapelement.getElementsByClassName('ptr_text')[0].innerHTML = 'Pull to refresh';
+          if (ptr_wrapelement.className.indexOf(' active') !== -1) {
+            ptr_wrapelement.className = ptr_wrapelement.className.replace(' ptr_active', '');
+            ptr_wrapelement.getElementsByClassName('ptr_text')[0].innerHTML = 'Pull to refresh';
+          }
         }
       }
     } else if ((ptr_scrollable_parent !== false)) {
@@ -209,17 +221,16 @@ function ptr_init() {
     if ((parent.hasAttribute('data-url') !== false) && (ptr_scrollable_parent !== false)) {
       if ((parent.hasAttribute('data-url') !== false)) {
         ptr_element = parent;
-        ptr_wrapelement = ptr_element.getElementsByClassName('wrap')[0];
+        ptr_wrapelement = ptr_element.getElementsByClassName('ptr_wrap')[0];
         ptr_eleId = parent.id;
         top = ptr_element.scrollTop;
-        ptr = ptr_element.getElementsByClassName('ptr_box')[0];
+        ptr_box = ptr_element.getElementsByClassName('ptr_box')[0];
 
-        if (ptr_wrapelement.getElementsByClassName('ptr_image')[0].className.match('loading')) {
-          ptr_wrapelement.className = ptr_wrapelement.className.replace(' active', '');
+        if (ptr_wrapelement.getElementsByClassName('ptr_image')[0].className.match('ptr_loading')) {
+          ptr_wrapelement.className = ptr_wrapelement.className.replace(' ptr_active', '');
           ptr_wrapelement.style.top = '51px';
         } else {
-          ptr.style.height = '0px';
-          ptr.style.top = '0px';
+          ptr_box.style.right = '99%';
         }
       }
     }

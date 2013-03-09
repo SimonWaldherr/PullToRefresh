@@ -19,8 +19,8 @@
       </header>
       <div id="demo">
         <div id="demo-window">
-          <div class="scrollable" id="list">
-            <div class="wrap">
+          <div class="ptr_scrollable" id="list" data-url="./random/html.php">
+            <div class="ptr_wrap">
               <ol class="content">
                 <li class="error">only works on touch devices, here you can put a refresh button for desktop browsers</li>
                 <li><strong>Pull here to try</strong></li>
@@ -117,7 +117,7 @@
         <ul>
           <li id="footer1" onclick="setFooter(1)"><a href="#">Hashes</a></li>
           <li id="footer2" onclick="setFooter(2)"><a href="#">Numbers</a></li>
-          <li id="footer3" onclick="setFooter(3)"><a href="#">HTML</a></li>
+          <li id="footer3" onclick="setFooter(3)" class="active"><a href="#">HTML</a></li>
           <li id="footer4" onclick="setFooter(4)"><a href="#">Reload</a></li>
         </ul>
       </footer>
@@ -127,7 +127,6 @@
     <script type="text/javascript">
       function init() {
         ptr_init();
-        window.alert('please select which data you want to load');
       }
       function setFooter(id) {
         document.getElementById('footer1').className = '';
