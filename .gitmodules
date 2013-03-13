@@ -1,3 +1,0 @@
-[submodule "reqwest"]
-	path = reqwest
-	url = git@github.com:ded/reqwest.git
