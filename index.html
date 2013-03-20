@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="./ptr.css" />
     <link rel="stylesheet" href="./demo.css" />
   </head>
-  <body id="body" onload="init();">
+  <body id="body" onload="init('en');">
     <div class="main-container">
       <header onclick="document.getElementById('list').scrollTop = 0;">
         <h1>PullToRefresh</h1>
@@ -124,8 +124,8 @@
     </div>
     <script type="text/javascript" src="./ptr.js"></script>
     <script type="text/javascript">
-      function init() {
-        ptr_init();
+      function init(lang) {
+        ptr_init(lang);
       }
       function setFooter(id) {
         document.getElementById('footer1').className = '';

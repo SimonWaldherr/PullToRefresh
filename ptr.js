@@ -1,16 +1,23 @@
 /*
  *
  * PullToRefresh
- * Version 0.008
+ * Version 0.009
  * License:  MIT
  * SimonWaldherr
  *
  */
 
-var ptr = [];
-var ptr_init = function () {
+var ptr = [],
+    ptr_settings = {mlang : 'en', mode : 'mail'},
+    ptr_messages = {en : {pulltorefresh : 'Pull to refresh', 'loading' : 'Loading ...'},
+                    de : {pulltorefresh : 'ziehen zum aktualisieren', 'loading' : 'laden ...'}};
+
+var ptr_init = function (language) {
   "use strict";
   var i = 0;
+  if(language !== undefined) {
+    ptr_settings.mlang = language;
+  }
   ptr.scrollable_parent = false;
   ptr.scrollables = document.getElementsByClassName('ptr_scrollable');
   if ((window.hasOwnProperty('ontouchstart')) || (window.navigator.msPointerEnabled)) {
@@ -29,7 +36,7 @@ var ptr_init = function () {
       ptr.box.appendChild(ptr.container);
       ptr.container.appendChild(ptr.image);
       ptr.container.appendChild(ptr.text);
-      ptr.text.innerHTML = 'Pull to refresh';
+      ptr.text.innerHTML = ptr_messages[ptr_settings.mlang].pulltorefresh;
 
       ptr.box.className = 'ptr_box';
       ptr.box.style.right = '99%';
@@ -56,6 +63,7 @@ var ptr_init = function () {
 
           ptr.scrollable_parent = i;
           i = 10;
+          
 
           if (parent.hasAttribute('data-url') !== false) {
             if (parent.getElementsByClassName('ptr_box')[0] === undefined) {
@@ -67,10 +75,10 @@ var ptr_init = function () {
               ptr.box.appendChild(ptr.container);
               ptr.container.appendChild(ptr.image);
               ptr.container.appendChild(ptr.text);
-              ptr.text.innerHTML = 'Pull to refresh';
+              ptr.text.innerHTML = ptr_messages[ptr_settings.mlang].pulltorefresh;
 
               ptr.box.className = 'ptr_box';
-              ptr.box.style.right = '0px';
+              ptr.box.style.right = '99%';
               ptr.container.className = 'ptr_container';
               ptr.image.className = 'ptr_image';
               ptr.text.className = 'ptr_text';
@@ -78,7 +86,10 @@ var ptr_init = function () {
               parent.firstElementChild.insertBefore(ptr.box, parent.firstElementChild.firstChild);
             } else {
               parent.getElementsByClassName('ptr_box')[0].style.opacity = 1.0;
-              parent.getElementsByClassName('ptr_text')[0].innerHTML = 'Pull to refresh';
+              if(parent.getElementsByClassName('ptr_text')[0].innerHTML !== ptr_messages[ptr_settings.mlang].loading) {
+                parent.getElementsByClassName('ptr_text')[0].innerHTML = ptr_messages[ptr_settings.mlang].pulltorefresh;
+              }
+              
             }
           } else if (parent.getElementsByClassName('ptr_box')[0] !== undefined) {
             parent.removeChild(parent.getElementsByClassName('ptr_box')[0]);
@@ -146,7 +157,7 @@ var ptr_init = function () {
           if (ptr.wrapelement.className.indexOf(' ptr_active') === -1) {
             ptr.box.style.right = '0px';
             ptr.wrapelement.className += ' ptr_active';
-            ptr.wrapelement.getElementsByClassName('ptr_text')[0].innerHTML = 'Loading ...';
+            ptr.wrapelement.getElementsByClassName('ptr_text')[0].innerHTML = ptr_messages[ptr_settings.mlang].loading;
             ptr.wrapelement.getElementsByClassName('ptr_image')[0].className += ' ptr_loading';
 
             if (parent.getAttribute('data-url') === 'reload') {
@@ -163,6 +174,12 @@ var ptr_init = function () {
             ajaxTimeout = window.setTimeout(function () {
               ajax.abort();
               console.log("AJAX Timeout Error");
+              alert('AJAX Timeout Error');
+              ptr.wrapelement.getElementsByClassName('ptr_text')[0].innerHTML = '';
+              ptr.wrapelement.className = ptr.wrapelement.className.replace(' ptr_active', '');
+              ptr.wrapelement.style.top = '0px';
+              ptr.box = document.getElementById(ptr.eleId).getElementsByClassName('ptr_box')[0];
+              ptr.box.getElementsByClassName('ptr_image')[0].className = ptr.box.getElementsByClassName('ptr_image')[0].className.replace(' ptr_loading', '');
             }, 6000);
             ajax.onreadystatechange = function () {
 
@@ -206,7 +223,7 @@ var ptr_init = function () {
         } else if (ptr.element.scrollTop !== 0) {
           if (ptr.wrapelement.className.indexOf(' active') !== -1) {
             ptr.wrapelement.className = ptr.wrapelement.className.replace(' ptr_active', '');
-            ptr.wrapelement.getElementsByClassName('ptr_text')[0].innerHTML = 'Pull to refresh';
+            ptr.wrapelement.getElementsByClassName('ptr_text')[0].innerHTML = ptr_messages[ptr_settings.mlang].pulltorefresh;
           }
         }
       }
