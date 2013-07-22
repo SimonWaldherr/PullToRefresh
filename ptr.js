@@ -5,15 +5,20 @@
  * SimonWaldherr *
  * * * * * * * * */
 
+/*jslint browser: true, indent: 2 */
+/*global ActiveXObject */
+
 var ptr = [],
-    ptr_settings = {mlang : 'en', mode : 'mail'},
-    ptr_messages = {en : {pulltorefresh : 'Pull to refresh', 'loading' : 'Loading ...'},
-                    de : {pulltorefresh : 'ziehen zum aktualisieren', 'loading' : 'laden ...'}};
+  ptr_settings = {mlang : 'en', mode : 'mail'},
+  ptr_messages = {
+    en : {pulltorefresh : 'Pull to refresh', 'loading' : 'Loading ...'},
+    de : {pulltorefresh : 'ziehen zum aktualisieren', 'loading' : 'laden ...'}
+  };
 
 var ptr_init = function (language) {
   "use strict";
   var i = 0;
-  if(language !== undefined) {
+  if (language !== undefined) {
     ptr_settings.mlang = language;
   }
   ptr.scrollable_parent = false;
@@ -61,7 +66,6 @@ var ptr_init = function (language) {
 
           ptr.scrollable_parent = i;
           i = 10;
-          
 
           if (parent.hasAttribute('data-url') !== false) {
             if (parent.getElementsByClassName('ptr_box')[0] === undefined) {
@@ -84,10 +88,9 @@ var ptr_init = function (language) {
               parent.firstElementChild.insertBefore(ptr.box, parent.firstElementChild.firstChild);
             } else {
               parent.getElementsByClassName('ptr_box')[0].style.opacity = 1.0;
-              if(parent.getElementsByClassName('ptr_text')[0].innerHTML !== ptr_messages[ptr_settings.mlang].loading) {
+              if (parent.getElementsByClassName('ptr_text')[0].innerHTML !== ptr_messages[ptr_settings.mlang].loading) {
                 parent.getElementsByClassName('ptr_text')[0].innerHTML = ptr_messages[ptr_settings.mlang].pulltorefresh;
               }
-              
             }
           } else if (parent.getElementsByClassName('ptr_box')[0] !== undefined) {
             parent.removeChild(parent.getElementsByClassName('ptr_box')[0]);
@@ -120,7 +123,13 @@ var ptr_init = function (language) {
       scroll = false,
       rotate = 90,
       i = 0,
-      top, scrolldistance, time, insert, inserted, ajax, ajaxTimeout, requrl;
+      top,
+      time,
+      insert,
+      inserted,
+      ajax,
+      ajaxTimeout,
+      requrl;
 
     if (ptr.scrollable_parent === false) {
       e.preventDefault();
@@ -132,15 +141,11 @@ var ptr_init = function (language) {
     }
 
     if ((ptr.scrollable_parent !== false) && (parent.hasAttribute('data-url') !== false)) {
-
       scroll = true;
-
       ptr.element = parent;
       ptr.wrapelement = ptr.element.getElementsByClassName('ptr_wrap')[0];
       top = ptr.element.scrollTop;
       ptr.box = ptr.element.getElementsByClassName('ptr_box')[0];
-      scrolldistance = Math.abs(ptr.element.scrollTop);
-
       if ((ptr.wrapelement.className.indexOf(' active') === -1) && (!ptr.wrapelement.getElementsByClassName('ptr_image')[0].className.match('ptr_loading')) && (ptr.element.scrollTop < 1)) {
         if (ptr.element.scrollTop < -25) {
           rotate = (top < -40) ? -90 : 130 + parseInt(top * 12 + 270, 10);
@@ -171,8 +176,6 @@ var ptr_init = function (language) {
             ajax = (window.ActiveXObject) ? new ActiveXObject("Microsoft.XMLHTTP") : (XMLHttpRequest && new XMLHttpRequest()) || null;
             ajaxTimeout = window.setTimeout(function () {
               ajax.abort();
-              console.log("AJAX Timeout Error");
-              alert('AJAX Timeout Error');
               ptr.wrapelement.getElementsByClassName('ptr_text')[0].innerHTML = '';
               ptr.wrapelement.className = ptr.wrapelement.className.replace(' ptr_active', '');
               ptr.wrapelement.style.top = '0px';
@@ -184,10 +187,7 @@ var ptr_init = function (language) {
               if (ajax.readyState === 4) {
                 if (ajax.status === 200) {
                   clearTimeout(ajaxTimeout);
-                  //console.log("AJAX-Status: " + ajax.status + " " + ajax.statusText + " at " + time.getTime());
                   if (ajax.status !== 200) {
-                    console.log("AJAX Response Error");
-                    alert('Could not connect');
                     ptr.wrapelement.style.top = '0px';
                     ptr.box.getElementsByClassName('ptr_image')[0].className = ptr.getElementsByClassName('ptr_image')[0].className.replace(' loading', '');
                     ptr.wrapelement.className = ptr.wrapelement.className.replace(' ptr_active', '');
@@ -236,8 +236,7 @@ var ptr_init = function (language) {
 
   document.addEventListener('touchend', function (e) {
     var parent = e.target,
-      i = 0,
-      top;
+      i = 0;
 
     for (i = 0; i < ptr.scrollable_parent; i += 1) {
       parent = parent.parentNode;
@@ -248,7 +247,6 @@ var ptr_init = function (language) {
         ptr.element = parent;
         ptr.wrapelement = ptr.element.getElementsByClassName('ptr_wrap')[0];
         ptr.eleId = parent.id;
-        top = ptr.element.scrollTop;
         ptr.box = ptr.element.getElementsByClassName('ptr_box')[0];
 
         if (ptr.wrapelement.getElementsByClassName('ptr_image')[0].className.match('ptr_loading')) {
