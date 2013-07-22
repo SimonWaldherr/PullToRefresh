@@ -1,5 +1,5 @@
 # PullToRefresh
-# Version 0.009
+# Version 0.1.0
 # License:  MIT
 # SimonWaldherr
 

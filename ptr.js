@@ -1,11 +1,9 @@
-/*
- *
- * PullToRefresh
- * Version 0.009
- * License:  MIT
- * SimonWaldherr
- *
- */
+/* * * * * * * * *
+ * PullToRefresh *
+ * Version 0.1.0 *
+ * License:  MIT *
+ * SimonWaldherr *
+ * * * * * * * * */
 
 var ptr = [],
     ptr_settings = {mlang : 'en', mode : 'mail'},
