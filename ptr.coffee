@@ -1,8 +1,13 @@
-# PullToRefresh
-# Version 0.1.0
-# License:  MIT
-# SimonWaldherr
+# * * * * * * * *
+# * PullToRefresh *
+# * Version 0.1.1 *
+# * License:  MIT *
+# * SimonWaldherr *
+# * * * * * * * * 
 
+#jslint browser: true, indent: 2 
+
+#global ActiveXObject 
 ptr = []
 ptr_settings =
   mlang: "en"
@@ -47,7 +52,6 @@ ptr_init = (language) ->
     i += 1
   document.addEventListener "touchstart", (e) ->
     parent = e.target
-    i = 0
     return false  if parent.className is `undefined`
     i = 0
     while i < 10
@@ -87,14 +91,13 @@ ptr_init = (language) ->
         return false
       parent = parent.parentNode
       i += 1
+    return
 
   document.addEventListener "touchmove", (e) ->
     parent = e.target
     scroll = false
     rotate = 90
-    i = 0
     top = undefined
-    scrolldistance = undefined
     time = undefined
     insert = undefined
     inserted = undefined
@@ -114,7 +117,6 @@ ptr_init = (language) ->
       ptr.wrapelement = ptr.element.getElementsByClassName("ptr_wrap")[0]
       top = ptr.element.scrollTop
       ptr.box = ptr.element.getElementsByClassName("ptr_box")[0]
-      scrolldistance = Math.abs(ptr.element.scrollTop)
       if (ptr.wrapelement.className.indexOf(" active") is -1) and (not ptr.wrapelement.getElementsByClassName("ptr_image")[0].className.match("ptr_loading")) and (ptr.element.scrollTop < 1)
         rotate = (if (top < -40) then -90 else 130 + parseInt(top * 12 + 270, 10))  if ptr.element.scrollTop < -25
         if ptr.element.scrollTop < 0
@@ -136,23 +138,18 @@ ptr_init = (language) ->
             ajax = (if (window.ActiveXObject) then new ActiveXObject("Microsoft.XMLHTTP") else (XMLHttpRequest and new XMLHttpRequest()) or null)
             ajaxTimeout = window.setTimeout(->
               ajax.abort()
-              console.log "AJAX Timeout Error"
-              alert "AJAX Timeout Error"
               ptr.wrapelement.getElementsByClassName("ptr_text")[0].innerHTML = ""
               ptr.wrapelement.className = ptr.wrapelement.className.replace(" ptr_active", "")
               ptr.wrapelement.style.top = "0px"
               ptr.box = document.getElementById(ptr.eleId).getElementsByClassName("ptr_box")[0]
               ptr.box.getElementsByClassName("ptr_image")[0].className = ptr.box.getElementsByClassName("ptr_image")[0].className.replace(" ptr_loading", "")
+              return
             , 6000)
             ajax.onreadystatechange = ->
               if ajax.readyState is 4
                 if ajax.status is 200
                   clearTimeout ajaxTimeout
-
-                  #console.log("AJAX-Status: " + ajax.status + " " + ajax.statusText + " at " + time.getTime());
                   if ajax.status isnt 200
-                    console.log "AJAX Response Error"
-                    alert "Could not connect"
                     ptr.wrapelement.style.top = "0px"
                     ptr.box.getElementsByClassName("ptr_image")[0].className = ptr.getElementsByClassName("ptr_image")[0].className.replace(" loading", "")
                     ptr.wrapelement.className = ptr.wrapelement.className.replace(" ptr_active", "")
@@ -171,6 +168,7 @@ ptr_init = (language) ->
                     ptr.box.style.right = "99%"
                     ptr.wrapelement.getElementsByClassName("ptr_image")[0].className = ptr.wrapelement.getElementsByClassName("ptr_image")[0].className.replace(" ptr_loading", "")
                     ptr.scrollable_parent = false
+              return
 
             requrl = parent.getAttribute("data-url") + "?rt=" + time.getTime()
             ajax.open "POST", requrl, true
@@ -182,11 +180,10 @@ ptr_init = (language) ->
             ptr.wrapelement.getElementsByClassName("ptr_text")[0].innerHTML = ptr_messages[ptr_settings.mlang].pulltorefresh
     else scroll = true  if ptr.scrollable_parent isnt false
     e.preventDefault()  if scroll is false
+    return
 
   document.addEventListener "touchend", (e) ->
     parent = e.target
-    i = 0
-    top = undefined
     i = 0
     while i < ptr.scrollable_parent
       parent = parent.parentNode
@@ -196,7 +193,6 @@ ptr_init = (language) ->
         ptr.element = parent
         ptr.wrapelement = ptr.element.getElementsByClassName("ptr_wrap")[0]
         ptr.eleId = parent.id
-        top = ptr.element.scrollTop
         ptr.box = ptr.element.getElementsByClassName("ptr_box")[0]
         if ptr.wrapelement.getElementsByClassName("ptr_image")[0].className.match("ptr_loading")
           ptr.wrapelement.className = ptr.wrapelement.className.replace(" ptr_active", "")
@@ -204,3 +200,6 @@ ptr_init = (language) ->
         else
           ptr.box.style.right = "99%"
     ptr.scrollable_parent = false
+    return
+
+  return
