@@ -1,22 +1,22 @@
-#PullToRefresh
+# PullToRefresh
 
 a JavaScript implementation of PullToRefresh **without jQuery or other Frameworks** and under the **MIT-License**
 
-##about
+## about
 
 License:   MIT  
 Version: 0.1.2  
 Date:  11.2014  
 
-##howto
+## howto
 
 take a look at the index.html file and use it as a reference on how to integrate PullToRefresh into your project.  
 
-##demo
+## demo
 
 scan this QR-Code with your iPhone to open the PullToRefresh example  
 <img src="http://cdn.simon.waldherr.eu/projects/PTR/qr.png" alt="http://cdn.simon.waldherr.eu/projects/PTR/"/>  
 
-##contact
+## contact
 
 Feel free to contact me via [eMail](mailto:contact@simonwaldherr.de) or on [Twitter](http://twitter.com/simonwaldherr). This software will be continually developed. Suggestions and tips are always welcome.
