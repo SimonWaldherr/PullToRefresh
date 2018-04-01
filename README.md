@@ -1,8 +1,6 @@
 # PullToRefresh
 
-<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/bpWGS5JKXiHEB18kfHGr1x3q/SimonWaldherr/PullToRefresh'>
-  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/bpWGS5JKXiHEB18kfHGr1x3q/SimonWaldherr/PullToRefresh.svg' />
-</a>
+
 
 a JavaScript implementation of PullToRefresh **without jQuery or other Frameworks** and under the **MIT-License**
 
